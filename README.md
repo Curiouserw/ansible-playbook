@@ -2,7 +2,7 @@
 # 一系列Ansible功能playbook
 
 # Playbook说明：
-1.playbook/sethostanem.yml<br>
+## 1.playbook/sethostname.yml
 <pre>
 功能：设置主机清单中主机的主机名，并修改/etc/hosts文件中IP与域名的映射关系
 条件：主机清单中主机要提前设置主机名
