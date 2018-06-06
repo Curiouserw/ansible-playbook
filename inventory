@@ -1,0 +1,19 @@
+[k8s:children]
+masters
+nodes
+
+
+[k8s:vars]
+ansible_ssh_pass='Mbc@1234'
+
+[masters]
+172.16.2.5 hostname=master1.k8s.curiouser.com
+172.16.2.6 hostname=master2.k8s.curiouser.com
+172.16.2.7 hostname=master3.k8s.curiouser.com
+[nodes]
+172.16.2.8 hostname=node1.k8s.curiouser.com
+172.16.2.9 hostname=node2.k8s.curiouser.com
+172.16.2.10 hostname=node3.k8s.curiouser.com
+
+[etcd]
+172.16.2.[2:4] 

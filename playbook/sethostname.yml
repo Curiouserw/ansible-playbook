@@ -1,0 +1,18 @@
+---
+- hosts: k8s
+  tasks:
+    - name: set hostname
+      shell: hostnamectl set-hostname --static {{hostname|quote}}
+    - name: change the hosts file because the hosts file not change by ansible hostname module
+      template : src=templates/hosts.j2 dest=/etc/hosts
+    - name: get hostname
+      shell: hostname
+      register: hostname
+    - name: display hostname
+      debug: msg=" {{ hostname['stdout'] }} "
+    - name: get hosts
+      shell: cat /etc/hosts
+      register: hosts
+    - name: display hosts
+      debug: msg="{{ hosts['stdout'] }}"
+
