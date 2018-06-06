@@ -4,7 +4,6 @@ nodes
 
 
 [k8s:vars]
-ansible_ssh_pass='Mbc@1234'
 
 [masters]
 172.16.2.5 hostname=master1.k8s.curiouser.com

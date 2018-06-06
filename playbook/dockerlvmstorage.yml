@@ -1,0 +1,32 @@
+---
+- hosts: 172.16.2.10
+  gather_facts: no
+  vars_prompt:
+    - name: "docker_storage_lvm_device"
+      prompt : "请输入LVM磁盘设备"
+      private: no
+  tasks:
+  - name: install docker 
+    yum: state=present name={{item}}
+    with_items:
+    - docker
+  - name: stop docker daemon
+    systemd: name=docker state=stopped
+  - name: delete old storage profile
+    shell: rm -rf /etc/sysconfig/docker-storage    
+  - name: copy docker lvm storage profile
+    template : src=templates/docker-storage-setup.j2 dest=/etc/sysconfig/docker-storage-setup 
+  - name: setup docker lvm storage
+    shell: docker-storage-setup 
+  - name: start docker daemon
+    systemd: name=docker state=started enabled=yes
+    notify: 
+    - verify docker storage
+    - display docker info
+  handlers:
+    - name: verify docker storage
+      shell: docker info;lsblk
+      register: dockerinfo
+    - name: display docker info
+      debug: msg="{{dockerinfo['stdout_lines']}}"
+
