@@ -7,4 +7,5 @@ playbook/sethostanem.yml
 </pre>
 
 # Playbook执行说明
-  ansible-playbook -i inventory playbook/sethostname.yml
+    
+    ansible-playbook -i inventory playbook/sethostname.yml
