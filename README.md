@@ -8,4 +8,8 @@
 
 # Playbook执行说明
     
-    ansible-playbook -i inventory playbook/sethostname.yml
+    ansible-playbook -i inventory playbook/sethostname.yml -k --ask-vault-pass
+    参数解释：
+       -k：输入root用户SSH连接密码
+       --ask-vault-pass：输入inventory主机清单文件加密后的密码
+
