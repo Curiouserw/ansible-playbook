@@ -6,18 +6,18 @@
   tasks:
     - name: 使用hostnamectl设置主机名
       shell: hostnamectl set-hostname --static {{hostname|quote}}
-    - name: change the hosts file because the hosts file not change by ansible hostname module
+    - name: 拷贝/etc/hosts文件,配置了新主机名与IP的映射关系 
       template : src=templates/hosts.j2 dest=/etc/hosts
     - name: 在新的hosts文件后面追加各自机器内网ip和hostname
       lineinfile: dest=/etc/hosts line="{{IP}} {{ansible_hostname}} {{hostname}}"
-    - name: get hostname
+    - name: 获取主机名
       shell: hostname
       register: hostname
-    - name: display hostname
+    - name: 显示主机名
       debug: msg=" {{ hostname['stdout'] }} "
-    - name: get hosts
+    - name: 获取/etc/hosts文件中内容
       shell: cat /etc/hosts
       register: hosts
-    - name: display hosts
+    - name: 显示/etc/hosts文件中的内容
       debug: msg="{{ hosts['stdout'] }}"
 
