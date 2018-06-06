@@ -6,17 +6,17 @@
       prompt : "请输入LVM磁盘设备"
       private: no
   tasks:
-  - name: install docker 
+  - name: 安装docker 
     yum: state=present name={{item}}
     with_items:
     - docker
-  - name: stop docker daemon
+  - name: 停止docker daemon进程
     systemd: name=docker state=stopped
-  - name: delete old storage profile
+  - name: 删除旧的docker-storage文件
     shell: rm -rf /etc/sysconfig/docker-storage    
   - name: copy docker lvm storage profile
     template : src=templates/docker-storage-setup.j2 dest=/etc/sysconfig/docker-storage-setup 
-  - name: setup docker lvm storage
+  - name: 设置docker lvm storage
     shell: docker-storage-setup 
   - name: start docker daemon
     systemd: name=docker state=started enabled=yes
