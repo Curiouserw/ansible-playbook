@@ -1,11 +1,15 @@
 ---
 - hosts: k8s
-  gather_facts: no
+  gather_facts: yes 
+  vars:
+       IP: "{{ ansible_eth0['ipv4']['address'] }}"
   tasks:
-    - name: set hostname
+    - name: 使用hostnamectl设置主机名
       shell: hostnamectl set-hostname --static {{hostname|quote}}
     - name: change the hosts file because the hosts file not change by ansible hostname module
       template : src=templates/hosts.j2 dest=/etc/hosts
+    - name: 在新的hosts文件后面追加各自机器内网ip和hostname
+      lineinfile: dest=/etc/hosts line="{{IP}} {{ansible_hostname}} {{hostname}}"
     - name: get hostname
       shell: hostname
       register: hostname
