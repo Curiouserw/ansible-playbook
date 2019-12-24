@@ -1,23 +1,23 @@
 ---
 - hosts: k8s
-  gather_facts: yes 
-  vars:
-       IP: "{{ ansible_eth0['ipv4']['address'] }}"
+  gather_facts: yes
   tasks:
     - name: 使用hostnamectl设置主机名
       shell: hostnamectl set-hostname --static {{hostname|quote}}
-    - name: 拷贝/etc/hosts文件,配置了新主机名与IP的映射关系 
+    - name: 拷贝playbook/templates/hosts.j2文件内容到目标主机/etc/hosts文件中
       template : src=templates/hosts.j2 dest=/etc/hosts
-    - name: 在新的hosts文件后面追加各自机器内网ip和hostname
-      lineinfile: dest=/etc/hosts line="{{IP}} {{ansible_hostname}} {{hostname}}"
-    - name: 获取主机名
-      shell: hostname
-      register: hostname
-    - name: 显示主机名
-      debug: msg=" {{ hostname['stdout'] }} "
+    - name: 在新hosts文件后面追加IP地址和hostname的映射关系
+      lineinfile:
+        dest=/etc/hosts
+        line="{{inventory_hostname|quote}} {{hostname}} {{ ansible_hostname }}"
+    - name: 在新hosts文件后面追加组中所有主机的IP地址与hostname的映射关系
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ hostvars[item].inventory_hostname }} {{ hostvars[item].ansible_nodename}} {{ hostvars[item].ansible_hostname }}"
+        state: present
+      with_items: "{{ groups.all }}"
     - name: 获取/etc/hosts文件中内容
       shell: cat /etc/hosts
       register: hosts
     - name: 显示/etc/hosts文件中的内容
       debug: msg="{{ hosts['stdout'] }}"
-
